@@ -7,7 +7,9 @@ from typing import Any
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import PromptTemplate
 
-from ..prompts import generate_subtopics_prompt
+from gpt_researcher.llm_provider.generic.base import NO_SUPPORT_TEMPERATURE_MODELS, SUPPORT_REASONING_EFFORT_MODELS, ReasoningEfforts
+
+from ..prompts import PromptFamily
 from .costs import estimate_llm_cost
 from .validators import Subtopics
 import os
@@ -28,7 +30,7 @@ async def create_chat_completion(
         websocket: Any | None = None,
         llm_kwargs: dict[str, Any] | None = None,
         cost_callback: callable = None,
-        reasoning_effort: str | None = "low"
+        reasoning_effort: str | None = ReasoningEfforts.Medium.value
 ) -> str:
     """Create a chat completion using the OpenAI API
     Args:
@@ -58,9 +60,10 @@ async def create_chat_completion(
         **(llm_kwargs or {})
     }
 
-    if 'o3' in model or 'o1' in model:
+    if model in SUPPORT_REASONING_EFFORT_MODELS:
         kwargs['reasoning_effort'] = reasoning_effort
-    else:
+
+    if model not in NO_SUPPORT_TEMPERATURE_MODELS:
         kwargs['temperature'] = temperature
         kwargs['max_tokens'] = max_tokens
 
@@ -87,7 +90,13 @@ async def create_chat_completion(
     raise RuntimeError(f"Failed to get response from {llm_provider} API")
 
 
-async def construct_subtopics(task: str, data: str, config, subtopics: list = []) -> list:
+async def construct_subtopics(
+    task: str,
+    data: str,
+    config,
+    subtopics: list = [],
+    prompt_family: type[PromptFamily] | PromptFamily = PromptFamily,
+) -> list:
     """
     Construct subtopics based on the given task and data.
 
@@ -96,6 +105,7 @@ async def construct_subtopics(task: str, data: str, config, subtopics: list = []
         data (str): Additional data for context.
         config: Configuration settings.
         subtopics (list, optional): Existing subtopics. Defaults to [].
+        prompt_family (PromptFamily): Family of prompts
 
     Returns:
         list: A list of constructed subtopics.
@@ -104,7 +114,7 @@ async def construct_subtopics(task: str, data: str, config, subtopics: list = []
         parser = PydanticOutputParser(pydantic_object=Subtopics)
 
         prompt = PromptTemplate(
-            template=generate_subtopics_prompt(),
+            template=prompt_family.generate_subtopics_prompt(),
             input_variables=["task", "data", "subtopics", "max_subtopics"],
             partial_variables={
                 "format_instructions": parser.get_format_instructions()},
@@ -115,9 +125,8 @@ async def construct_subtopics(task: str, data: str, config, subtopics: list = []
             **(config.llm_kwargs or {})
         }
 
-        temperature = config.temperature
-        if 'o3' in config.smart_llm_model or 'o1' in config.smart_llm_model:
-            kwargs['reasoning_effort'] = "high"
+        if config.smart_llm_model in SUPPORT_REASONING_EFFORT_MODELS:
+            kwargs['reasoning_effort'] = ReasoningEfforts.High.value
         else:
             kwargs['temperature'] = config.temperature
             kwargs['max_tokens'] = config.smart_token_limit

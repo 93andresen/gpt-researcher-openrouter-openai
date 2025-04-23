@@ -2,7 +2,7 @@ import os
 from typing import Any
 
 OPENAI_EMBEDDING_MODEL = os.environ.get(
-    "OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"
+    "OPENAI_EMBEDDING_MODEL", "text-embedding-3-large"
 )
 
 _SUPPORTED_PROVIDERS = {
@@ -19,6 +19,7 @@ _SUPPORTED_PROVIDERS = {
     "nomic",
     "voyageai",
     "dashscope",
+    "openrouter_openai",
     "custom",
     "bedrock",
 }
@@ -40,6 +41,18 @@ class Memory:
                     check_embedding_ctx_length=False,
                     **embdding_kwargs,
                 )  # quick fix for lmstudio
+            case "openrouter_openai":
+                from langchain_openai import OpenAIEmbeddings
+
+                # Special provider that uses OpenRouter for LLMs but OpenAI for embeddings
+                _embeddings = OpenAIEmbeddings(
+                    model=model,
+                    openai_api_key=os.getenv("OPENAI_EMBEDDINGS_API_KEY"),
+                    openai_api_base=os.getenv("OPENAI_EMBEDDINGS_BASE_URL", "https://api.openai.com/v1"),
+                    check_embedding_ctx_length=False,
+                    **embdding_kwargs,
+                )
+                
             case "openai":
                 from langchain_openai import OpenAIEmbeddings
 

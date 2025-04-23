@@ -1,0 +1,40 @@
+I have modified this repo and I want to update it to get the latest updates.
+
+create a folder called "changes"
+
+Inside that folder you should collect all relevant information, all diffs, all incoming changes, all modifications and changes I have made to the codebase, explenartions of everything. Make a comprehensive file called "full-documentation-of-situation-intent.md" that documents EXACTLY what the situation is in detail, what changes I have made, what changes are conflicting if any with the updatres and ALL information needed to know exactly everything needed to be able to talk about this and make ALL decicions without having to check ANYTHING.
+
+The goal is that I want a way of doing this that I can use for any project regardless of how much changes i have made to it.
+
+I don't want youo to provide solutions. I want you to provide verbose information and I will use that to get a solution.
+
+Do not make any changes to the code and do not run any git commands that updates or anything. All git commands should simply be read only commands.
+
+The only change that should happen is literally the new folder you will create after gathering all information!
+
+1. Gather information in various ways.
+2. Be on the safe side that you actually have all information and all the diffs and everything!
+3. Create one final file that contains ABSOLUTLUTLY ALL of the information called "all-changes.md"
+
+---
+
+Actually, I don't want all the changes that are incoming in detail. I just need to know about the conflicts if there are any. Other then that just continue.
+
+---
+
+Make a file with high level overview that is around 1000 words, then after that create a more detailed one
+
+---
+
+Read the files in this repo and figure out exactly what the different large language models are used for. Spesificlally the 3 env vars:
+
+FAST_LLM
+SMART_LLM
+STRATEGIC_LLM
+
+I need to know how smart the large language models needs to be for it to be optimal.
+
+Make a file that explains exactly how they are used and all information needed in order to understand how to make the decicions.
+
+---
+

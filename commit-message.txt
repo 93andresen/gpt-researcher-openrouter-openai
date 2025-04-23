@@ -1,0 +1,10 @@
+Feat: Add OpenRouter LLM with OpenAI Embeddings support
+
+This commit introduces support for using OpenAI embeddings alongside OpenRouter for LLM calls in the GPT-Researcher project. This addresses the need to leverage OpenRouter's diverse LLM options while utilizing OpenAI's embedding service, as explored during discussions on integrating OpenRouter and testing AI agent reliability.
+
+Key change:
+- Added a new case `openrouter_openai` in `gpt_researcher/memory/embeddings.py` to specifically handle OpenAI embeddings when OpenRouter is the primary LLM provider. This uses separate environment variables (`OPENAI_EMBEDDINGS_API_KEY`, `OPENAI_EMBEDDINGS_BASE_URL`) for the OpenAI embedding endpoint.
+
+Other changes:
+- Updated `.gitignore` to reflect changes or additions related to this feature.
+- Created a new test file `tests/test-openrouter-openai.py` to verify that the configuration correctly uses OpenAI for embeddings while allowing OpenRouter for LLMs. # This file is only kept in the git history for potential future reference but is intended to be deleted immediately after the initial commit to this fork.

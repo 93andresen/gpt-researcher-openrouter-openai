@@ -1,3 +1,9 @@
+uv venv
+.venv\Scripts\activate
+uv pip install -r requirements.txt
+
+---
+
 # Guide to setting up a development environment with uv
 
 This guide explains how to set up a development environment for this project using `uv`.

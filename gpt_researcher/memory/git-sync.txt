@@ -1,3 +1,0 @@
-git pull upstream master --no-rebase
-git push origin master
-git pull upstream master --no-rebase && git push origin master

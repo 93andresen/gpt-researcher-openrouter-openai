@@ -50,7 +50,7 @@ async def create_chat_completion(
     # validate input
     if model is None:
         raise ValueError("Model cannot be None")
-    if max_tokens is not None and max_tokens > 16001:
+    if max_tokens is not None and max_tokens > 32001:
         raise ValueError(
             f"Max tokens cannot be more than 16,000, but got {max_tokens}")
 
@@ -66,6 +66,9 @@ async def create_chat_completion(
     if model not in NO_SUPPORT_TEMPERATURE_MODELS:
         kwargs['temperature'] = temperature
         kwargs['max_tokens'] = max_tokens
+    else:
+        kwargs['temperature'] = None
+        kwargs['max_tokens'] = None
 
     if llm_provider == "openai":
         base_url = os.environ.get("OPENAI_BASE_URL", None)
